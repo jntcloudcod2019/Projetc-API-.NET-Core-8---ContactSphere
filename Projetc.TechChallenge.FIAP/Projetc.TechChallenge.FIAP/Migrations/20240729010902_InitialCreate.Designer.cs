@@ -11,7 +11,7 @@ using Projetc.TechChallenge.FIAP.Data;
 namespace Projetc.TechChallenge.FIAP.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240722025440_InitialCreate")]
+    [Migration("20240729010902_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
