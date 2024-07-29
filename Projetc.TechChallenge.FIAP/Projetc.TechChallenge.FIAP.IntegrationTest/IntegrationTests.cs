@@ -20,6 +20,7 @@ public class IntegrationTests : IClassFixture<CustomWebApplicationFactory<Progra
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task GetAllContacts_ReturnsSuccessStatusCode()
     {
         // Act
@@ -32,6 +33,7 @@ public class IntegrationTests : IClassFixture<CustomWebApplicationFactory<Progra
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task CreateContact_ReturnsSuccessStatusCode()
     {
         // Arrange
