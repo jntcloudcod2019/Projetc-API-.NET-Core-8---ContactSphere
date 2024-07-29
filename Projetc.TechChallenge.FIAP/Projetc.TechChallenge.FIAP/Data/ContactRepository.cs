@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using Npgsql;
-using Dapper;
+using Microsoft.EntityFrameworkCore;
 using Projetc.TechChallenge.FIAP.Interfaces;
 using Projetc.TechChallenge.FIAP.Models;
 
@@ -10,60 +8,42 @@ namespace Projetc.TechChallenge.FIAP.Data
 {
     public class ContactRepository : IContatctRepository
     {
-        private readonly string _connectionString;
+        private readonly AppDbContext _context;
 
-        public ContactRepository(IConfiguration configuration)
+        public ContactRepository(AppDbContext context)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection");
+            _context = context;
         }
 
         public async Task<IEnumerable<Contact>> GetAllContactsAsync()
         {
-            using (var connection = new NpgsqlConnection(_connectionString))
-            {
-                await connection.OpenAsync();
-                var contacts = await connection.QueryAsync<Contact>("SELECT * FROM Contacts");
-                return contacts;
-            }
+            return await _context.Contacts.ToListAsync();
         }
 
         public async Task<Contact> GetContactByIdAsync(int id)
         {
-            using (var connection = new NpgsqlConnection(_connectionString))
-            {
-                await connection.OpenAsync();
-                var contact = await connection.QueryFirstOrDefaultAsync<Contact>("SELECT * FROM Contacts WHERE Id = @Id", new { Id = id });
-                return contact;
-            }
+            return await _context.Contacts.FindAsync(id);
         }
 
         public async Task AddContactAsync(Contact contact)
         {
-            using (var connection = new NpgsqlConnection(_connectionString))
-            {
-                await connection.OpenAsync();
-                var query = "INSERT INTO Contacts (Name, Phone, Email, Ddd) VALUES (@Name, @Phone, @Email, @Ddd)";
-                await connection.ExecuteAsync(query, new { contact.Name, contact.Phone, contact.Email, contact.DDD });
-            }
+            _context.Contacts.Add(contact);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateContactAsync(Contact contact)
         {
-            using (var connection = new NpgsqlConnection(_connectionString))
-            {
-                await connection.OpenAsync();
-                var query = "UPDATE Contacts SET Name = @Name, Phone = @Phone, Email = @Email, Ddd = @Ddd WHERE Id = @Id";
-                await connection.ExecuteAsync(query, new { contact.Name, contact.Phone, contact.Email, contact.DDD, contact.Id });
-            }
+            _context.Contacts.Update(contact);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteContactAsync(int id)
         {
-            using (var connection = new NpgsqlConnection(_connectionString))
+            var contact = await _context.Contacts.FindAsync(id);
+            if (contact != null)
             {
-                await connection.OpenAsync();
-                var query = "DELETE FROM Contacts WHERE Id = @Id";
-                await connection.ExecuteAsync(query, new { Id = id });
+                _context.Contacts.Remove(contact);
+                await _context.SaveChangesAsync();
             }
         }
     }

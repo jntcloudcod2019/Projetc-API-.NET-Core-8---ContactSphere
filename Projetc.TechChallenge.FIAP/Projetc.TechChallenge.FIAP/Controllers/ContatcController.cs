@@ -30,13 +30,23 @@ public class ContatcController(IContatctRepository repository) : Controller
         return Ok(contact);
     }
 
+
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] Contact contact)
+    public async Task<IActionResult> Create([FromBody] ContactCreateDto contactDto)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
+
+        var contact = new Contact
+        {
+            Name = contactDto.Name,
+            Phone = contactDto.Phone,
+            Email = contactDto.Email,
+            DDD = contactDto.DDD
+        };
+
         await _repository.AddContactAsync(contact);
         return CreatedAtAction(nameof(GetById), new { id = contact.Id }, contact);
     }
