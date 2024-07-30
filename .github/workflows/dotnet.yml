@@ -22,7 +22,7 @@ jobs:
         dotnet-version: '8.x'
 
     - name: Restore dependencies
-      run: dotnet restore ./src/Projetc.TechChallenge.FIAP/Projetc.TechChallenge.FIAP.csproj
+      run: dotnet restore ./src/Projetc.TechChallenge.FIAP/Projetc.TechChallenge.FIAP/Projetc.TechChallenge.FIAP.csproj
 
     - name: Build
       run: dotnet build ./src/Projetc.TechChallenge.FIAP/Projetc.TechChallenge.FIAP.csproj --configuration Release
