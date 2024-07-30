@@ -25,7 +25,7 @@ jobs:
       run: dotnet restore Projetc.TechChallenge.FIAP/Projetc.TechChallenge.FIAP/Projetc.TechChallenge.FIAP.csproj
 
     - name: Build
-      run: dotnet build /src/Projetc.TechChallenge.FIAP/Projetc.TechChallenge.FIAP/Projetc.TechChallenge.FIAP.csproj --configuration Release
+      run: dotnet build Projetc.TechChallenge.FIAP/Projetc.TechChallenge.FIAP/Projetc.TechChallenge.FIAP.csproj --configuration Release 
 
     - name: Test
-      run: dotnet test ./tests/Projetc.TechChallenge.FIAP.IntegrationTest/Projetc.TechChallenge.FIAP.IntegrationTest.csproj --configuration Release
+      run: dotnet test Projetc.TechChallenge.FIAP/Projetc.TechChallenge.FIAP.IntegrationTest/Projetc.TechChallenge.FIAP.IntegrationTest.csproj  --no-restore --verbosity normal
