@@ -19,7 +19,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IContatctRepository, ContactRepository>();
 builder.Services.AddScoped<IResponseService, ResponseService>();
 
-builder.Services.AddMetrics();  
+builder.Services.AddMetrics();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<ILogService, LogService>();
 
 // Registro do Swagger
 builder.Services.AddEndpointsApiExplorer();

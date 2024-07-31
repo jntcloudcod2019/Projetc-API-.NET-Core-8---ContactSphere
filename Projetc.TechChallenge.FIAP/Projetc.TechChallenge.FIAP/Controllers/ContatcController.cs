@@ -13,6 +13,8 @@ public class ContatcController(IContatctRepository repository) : Controller
 {
     private readonly IResponseService _responseService;
     private readonly IContatctRepository _repository = repository;
+    private readonly IEmailService _emailService;
+    private readonly ILogService _logService;
 
     ResponseService service = new ResponseService();
 
@@ -47,6 +49,13 @@ public class ContatcController(IContatctRepository repository) : Controller
             return BadRequest(ModelState);
         }
 
+        bool contactExists = await _repository.ContactExistsAsync(contactDto.Name, contactDto.Phone, contactDto.Email, contactDto.DDD);
+        if (contactExists)
+        {
+          await _logService.LogAsync(null, "Contact Creation Attempt", $"Failed to create contact with email {contactDto.Email}. Contact already exists.");
+            return Conflict("Contact already exists.");
+        }
+
         var contact = new Contact
         {
             Name = contactDto.Name,
@@ -56,8 +65,10 @@ public class ContatcController(IContatctRepository repository) : Controller
         };
 
         await _repository.AddContactAsync(contact);
-        await service.WriteResponseAsync(HttpContext, StatusCodes.Status200OK, contactDto); 
-        return new EmptyResult();
+        await service.WriteResponseAsync(HttpContext, StatusCodes.Status200OK, contactDto);
+        await _emailService.SendEmailAsync(EmailMessageType.ContactCreated, contact);
+        await _logService.LogAsync(contact.Id, "Contact Created", $"A new contact named {contact.Name} was created.");
+        return CreatedAtAction(nameof(GetById), new { id = contact.Id }, contact);
     }
 
     [HttpPut("/UpdateContact")]
@@ -68,6 +79,8 @@ public class ContatcController(IContatctRepository repository) : Controller
             return BadRequest();
         }
         await service.WriteResponseAsync(HttpContext, StatusCodes.Status200OK, contact);
+       await _emailService.SendEmailAsync(EmailMessageType.ContactUpdated, contact);
+        await _logService.LogAsync(contact.Id, "Contact update", $"A contact named {contact.Name} was update.");
         return new EmptyResult();
     }
 
@@ -80,7 +93,9 @@ public class ContatcController(IContatctRepository repository) : Controller
             return NotFound();
         }
         await _repository.DeleteContactAsync(id);
-         await service.WriteResponseAsync(HttpContext, StatusCodes.Status200OK, id);
+        await service.WriteResponseAsync(HttpContext, StatusCodes.Status200OK, id);
+        await _emailService.SendEmailAsync(EmailMessageType.ContactDeleted, contact);
+        await _logService.LogAsync(contact.Id, "Contact deleted", $"A contact named {contact.Name} was deleted.");
         return new EmptyResult();
     }
 }

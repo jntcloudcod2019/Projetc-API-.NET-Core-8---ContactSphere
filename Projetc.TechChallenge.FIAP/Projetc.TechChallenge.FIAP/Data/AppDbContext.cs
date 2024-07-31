@@ -7,8 +7,7 @@ namespace Projetc.TechChallenge.FIAP.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-
-
+        public DbSet<Log> Logs { get; set; }
         public DbSet<Contact> Contacts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
