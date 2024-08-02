@@ -3,9 +3,14 @@
     "http": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "swagger",
+      "launchUrl": "",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "MAIL_SMTP_SERVER": "smtp.office365.com",
+        "EMAIL_SMTP_PORT": "587",
+        "EMAIL_SENDER": "TechChallenge@fiap.com",
+        "EMAIL_PASSWORD": "esqueceuasenha2024",
+        "EMAIL_RECIPIENT": "jonathan_fernando2013@outlook.com"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5012"
@@ -13,7 +18,7 @@
     "https": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "swagger",
+      "launchUrl": "",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
@@ -23,7 +28,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "swagger",
+      "launchUrl": "",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

@@ -9,5 +9,6 @@ namespace Projetc.TechChallenge.FIAP.Interfaces
         Task AddContactAsync(Contact contact);
         Task UpdateContactAsync(Contact contact);
         Task DeleteContactAsync(int id);
+        Task<bool> ContactExistsAsync(string name, string phone, string email, string ddd);
     }
 }

@@ -1,10 +1,14 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Projetc.TechChallenge.FIAP.Data;
 using Projetc.TechChallenge.FIAP.Interfaces;
+using Projetc.TechChallenge.FIAP.Services;
+using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -13,6 +17,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Registro do repositório com a interface.
 builder.Services.AddScoped<IContatctRepository, ContactRepository>();
+builder.Services.AddScoped<IResponseService, ResponseService>();
+
+builder.Services.AddMetrics();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<ILogService, LogService>();
 
 // Registro do Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -41,9 +50,21 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Tech Chagelland - F2");
+        c.RoutePrefix = string.Empty;  // Isso fará com que o Swagger UI seja acessível na URL base
+    });
 }
 
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
+app.UseHttpMetrics();
+app.UseMetricServer();
+app.UseHttpMetrics();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();

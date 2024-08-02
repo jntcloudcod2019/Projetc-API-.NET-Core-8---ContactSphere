@@ -1,33 +1,31 @@
-name: .NET CI
+name: .NET Build and Test
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out repository
-      uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v3
 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v2
+      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '8.0.x'
+        dotnet-version: '8.x'
 
-    - name: Install dependencies
-      run: dotnet restore
+    - name: Restore dependencies
+      run: dotnet restore Projetc.TechChallenge.FIAP/Projetc.TechChallenge.FIAP/Projetc.TechChallenge.FIAP.csproj
 
     - name: Build
-      run: dotnet build --no-restore --configuration Release
+      run: dotnet build Projetc.TechChallenge.FIAP/Projetc.TechChallenge.FIAP/Projetc.TechChallenge.FIAP.csproj --configuration Release 
 
-    - name: Run unit tests
-      run: dotnet test --no-build --configuration Release --verbosity normal
-
-    - name: Run integration tests
-      run: dotnet test --no-build --configuration Release --verbosity normal --filter "Category=Integration"
+    - name: Test
+      run: dotnet test Projetc.TechChallenge.FIAP/Projetc.TechChallenge.FIAP.IntegrationTest/Projetc.TechChallenge.FIAP.IntegrationTest.csproj  --no-restore --verbosity normal

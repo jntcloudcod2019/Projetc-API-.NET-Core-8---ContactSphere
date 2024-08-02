@@ -46,5 +46,11 @@ namespace Projetc.TechChallenge.FIAP.Data
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<bool> ContactExistsAsync(string name, string phone, string email, string ddd)
+        {
+            return await _context.Contacts
+                .AnyAsync(c => c.Name == name && c.Phone == phone && c.Email == email && c.DDD == ddd);
+        }
     }
 }
