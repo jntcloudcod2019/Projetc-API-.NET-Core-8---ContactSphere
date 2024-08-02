@@ -66,8 +66,8 @@ public class ContatcController(IContatctRepository repository) : Controller
 
         await _repository.AddContactAsync(contact);
         await service.WriteResponseAsync(HttpContext, StatusCodes.Status200OK, contactDto);
-        await _emailService.SendEmailAsync(EmailMessageType.ContactCreated, contact);
-        await _logService.LogAsync(contact.Id, "Contact Created", $"A new contact named {contact.Name} was created.");
+        //await _emailService.SendEmailAsync(EmailMessageType.ContactCreated, contact);
+        //await _logService.LogAsync(contact.Id, "Contact Created", $"A new contact named {contact.Name} was created.");
         return CreatedAtAction(nameof(GetById), new { id = contact.Id }, contact);
     }
 
@@ -78,9 +78,10 @@ public class ContatcController(IContatctRepository repository) : Controller
         {
             return BadRequest();
         }
+        await repository.UpdateContactAsync(contact);
         await service.WriteResponseAsync(HttpContext, StatusCodes.Status200OK, contact);
-       await _emailService.SendEmailAsync(EmailMessageType.ContactUpdated, contact);
-        await _logService.LogAsync(contact.Id, "Contact update", $"A contact named {contact.Name} was update.");
+       //await _emailService.SendEmailAsync(EmailMessageType.ContactUpdated, contact);
+       // await _logService.LogAsync(contact.Id, "Contact update", $"A contact named {contact.Name} was update.");
         return new EmptyResult();
     }
 
@@ -94,8 +95,8 @@ public class ContatcController(IContatctRepository repository) : Controller
         }
         await _repository.DeleteContactAsync(id);
         await service.WriteResponseAsync(HttpContext, StatusCodes.Status200OK, id);
-        await _emailService.SendEmailAsync(EmailMessageType.ContactDeleted, contact);
-        await _logService.LogAsync(contact.Id, "Contact deleted", $"A contact named {contact.Name} was deleted.");
+        //await _emailService.SendEmailAsync(EmailMessageType.ContactDeleted, contact);
+        //await _logService.LogAsync(contact.Id, "Contact deleted", $"A contact named {contact.Name} was deleted.");
         return new EmptyResult();
     }
 }
